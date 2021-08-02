@@ -9,7 +9,7 @@
 # 使用示例
 
 ```injectablephp
-        $spider = new \Luler\SpiderProductInfo\SpiderProductInfoHelper([
+        $spider = new \SpiderProductInfo\SpiderProductInfoHelper([
             'proxy_server' => '121.127.241.235:32081',
         ]);
 
