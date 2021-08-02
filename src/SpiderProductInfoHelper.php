@@ -1,6 +1,6 @@
 <?php
 
-namespace Luler\SpiderProductInfo;
+namespace SpiderProductInfo;
 
 use Curl\Curl;
 
