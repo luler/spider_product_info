@@ -1,0 +1,26 @@
+{
+  "name": "luler/spider_product_info",
+  "description": "通过商品链接，简单爬取商品的基本信息，兼容主流电商平台",
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://github.com/luler/spider_product_info",
+  "authors": [
+    {
+      "name": "luler",
+      "email": "1207032539@qq.com",
+      "homepage": "https://github.com/luler",
+      "role": "Developer"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=7.1",
+    "curl/curl": "^2.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Luler\\Helpers\\": "src/Helpers"
+    }
+  }
+}
