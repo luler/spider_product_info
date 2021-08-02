@@ -2,7 +2,7 @@
 
 require 'vendor/autoload.php';
 
-$spider = new \Luler\Helpers\SpiderProductInfoHelper([
+$spider = new \Luler\SpiderProductInfo\SpiderProductInfoHelper([
     'proxy_server' => '121.127.241.235:32081',
 ]);
 
