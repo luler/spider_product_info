@@ -16,7 +16,9 @@
   "prefer-stable": true,
   "require": {
     "php": ">=7.1",
-    "curl/curl": "^2.3"
+    "curl/curl": "^2.3",
+    "ext-curl": "*",
+    "ext-mbstring": "*"
   },
   "autoload": {
     "psr-4": {

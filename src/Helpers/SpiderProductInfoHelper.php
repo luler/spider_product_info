@@ -12,6 +12,9 @@ class SpiderProductInfoHelper
         'proxy_password' => '',
     ];
 
+    /**
+     * @param array $agent_config //http请求代理服务配置
+     */
     public function __construct(array $agent_config = [])
     {
         $agent_config = array_filter($agent_config);
@@ -21,7 +24,12 @@ class SpiderProductInfoHelper
     }
 
     /**
-     * getValue 拿值,拿价格
+     * 截取字符
+     * @param $str
+     * @param $start
+     * @param $end
+     * @return int|mixed
+     * @author 我只想看看蓝天 <1207032539@qq.com>
      */
     private function getValue($str, $start, $end)
     {
@@ -30,9 +38,14 @@ class SpiderProductInfoHelper
     }
 
     /**
-     * post请求
+     * 请求工具
      * @param $url
+     * @param array $param
+     * @param false $is_post
+     * @param false $is_json
+     * @param false $is_use_agent
      * @return false|string|null
+     * @throws \Exception
      * @author 我只想看看蓝天 <1207032539@qq.com>
      */
     private function spiderRequest($url, $param = [], $is_post = false, $is_json = false, $is_use_agent = false)
@@ -70,9 +83,11 @@ class SpiderProductInfoHelper
     }
 
     /**
-     * 爬取商品价格
-     * @param $url
-     * @return int|string
+     * 爬取商品信息
+     * @param $url //商品链接
+     * @param false $is_use_agent //是否启用http代理
+     * @return array
+     * @throws \Exception
      * @author 我只想看看蓝天 <1207032539@qq.com>
      */
     public function info($url, $is_use_agent = false)
@@ -99,10 +114,17 @@ class SpiderProductInfoHelper
                 break;
             case 'detail.tmall.com'://天猫
                 //识别商品价格
+                preg_match('/skuId=(\d+)/', $url, $match);
+                $sku_id = $match[1] ?? '';
                 $data = $this->spiderRequest($url, [], false, false, $is_use_agent);
                 $data = mb_convert_encoding($data, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5');
-                $product_price = $this->getValue($data, '"defaultItemPrice":"', '"');
-                $product_price = explode(' ', $product_price)[0];
+                if (empty($sku_id)) {
+                    $product_price = $this->getValue($data, '"defaultItemPrice":"', '"');
+                    $product_price = explode(' ', $product_price)[0];
+                } else {
+                    preg_match('/\{[^\{]*"price":"([\d\.]+)"[^\{]*"skuId":"' . $sku_id . '"[^\}]*}/', $data, $match);
+                    $product_price = $match[1] ?? 0;
+                }
                 //识别商品名称
                 $product_name = $this->getValue($data, 'title":"', '"');
                 break;
