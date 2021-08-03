@@ -116,6 +116,18 @@ class SpiderProductInfoHelper
                 preg_match('/id="spec-img".*?data-origin="(http:|https:)?\/\/([^"]*)"/', $data, $matches);
                 $product_image = isset($matches[2]) ? ('http://' . $matches[2]) : '';
                 break;
+            case 'item.taobao.com'://淘宝
+                //识别商品价格
+                $data = $this->spiderRequest($url, [], false, false, $is_use_agent);
+                $data = mb_convert_encoding($data, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5');
+                preg_match('/class="tb-rmb-num">([\d\.]+)/', $data, $matches);
+                $product_price = $matches[1] ?? 0;
+                //识别商品名称
+                $product_name = $this->getValue($data, 'data-title="', '"');
+                //识别商品图片（一张）
+                preg_match('/id="J_ImgBooth".*?src="(http:|https:)?\/\/([^"]*)"/', $data, $matches);
+                $product_image = isset($matches[2]) ? ('http://' . $matches[2]) : '';
+                break;
             case 'detail.tmall.com'://天猫
             case 'chaoshi.detail.tmall.com'://天猫
                 //识别商品价格
