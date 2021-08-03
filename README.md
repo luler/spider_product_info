@@ -24,5 +24,6 @@
 array(2) {
   ["name"] => string(70) "姿彩a4打印纸整箱70g 80g复印纸80克a3 5包/箱(2500张) 70gA4"  //商品名称
   ["price"] => float(119)   //商品价格
+  ["image"] => float(100) "http://img.alicdn.com/imgextra/i3/3293436601/O1CN010PmYJ61ydJ4BbQG6v_!!3293436601.jpg_430x430q90.jpg"   //商品主图
 }
 ```
