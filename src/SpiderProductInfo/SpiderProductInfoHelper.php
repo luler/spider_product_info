@@ -95,6 +95,7 @@ class SpiderProductInfoHelper
         $host = parse_url($url)['host'] ?? '';
         $product_price = 0;
         $product_name = '';
+        $product_image = '';
         switch ($host) {
             case 'i-item.jd.com': //京东
             case 'item.jd.com': //京东
@@ -111,8 +112,12 @@ class SpiderProductInfoHelper
                 preg_match('/[\"\'\s]*(.*)[\"\'\s]*/s', $product_name, $matches);
                 $product_name = $matches[1] ?? '';
                 $product_name = trim($product_name);
+                //识别商品图片（一张）
+                preg_match('/id="spec-img".*?data-origin="(http:|https:)?\/\/([^"]*)"/', $data, $matches);
+                $product_image = isset($matches[2]) ? ('http://' . $matches[2]) : '';
                 break;
             case 'detail.tmall.com'://天猫
+            case 'chaoshi.detail.tmall.com'://天猫
                 //识别商品价格
                 preg_match('/skuId=(\d+)/', $url, $match);
                 $sku_id = $match[1] ?? '';
@@ -127,6 +132,9 @@ class SpiderProductInfoHelper
                 }
                 //识别商品名称
                 $product_name = $this->getValue($data, 'title":"', '"');
+                //识别商品图片（一张）
+                preg_match('/id="J_ImgBooth".*?src="(http:|https:)?\/\/([^"]*)"/', $data, $matches);
+                $product_image = isset($matches[2]) ? ('http://' . $matches[2]) : '';
                 break;
             case 'product.suning.com': //苏宁
                 //识别商品价格
@@ -142,6 +150,9 @@ class SpiderProductInfoHelper
                 $product_price = $this->getValue($price_data, 'promotionPrice":"', '"');
                 //识别商品名称
                 $product_name = $this->getValue($data, 'itemDisplayName":"', '"');
+                //识别商品图片（一张）
+                preg_match('/id="bigImg".*?src="(http:|https:)?\/\/([^"]*)"/', $data, $matches);
+                $product_image = isset($matches[2]) ? ('http://' . $matches[2]) : '';
                 break;
             case 'item.gome.com.cn': //国美
                 //识别商品价格
@@ -156,6 +167,9 @@ class SpiderProductInfoHelper
                 if (empty($product_name)) {
                     $product_name = $this->getValue($data, '<h1>', '<');
                 }
+                //识别商品图片（一张）
+                preg_match('/class="pic-big".*?src="(http:|https:)?\/\/([^"]*)"/s', $data, $matches);
+                $product_image = isset($matches[2]) ? ('http://' . $matches[2]) : '';
                 break;
             case 'b2b.nbdeli.com': //得力
                 //识别商品价格
@@ -163,6 +177,9 @@ class SpiderProductInfoHelper
                 $product_price = $this->getValue($data, '"SalePrice":', ',');
                 //识别商品名称
                 $product_name = $this->getValue($data, '"StyleName":"', '"');
+                //识别商品图片（一张）
+                preg_match('/id="Jqzzom".*?src="(http:|https:)?\/\/([^"]*)"/s', $data, $matches);
+                $product_image = isset($matches[2]) ? ('http://' . $matches[2]) : '';
                 break;
             case 'www.mg.cn': //晨光
                 //识别商品价格
@@ -171,6 +188,9 @@ class SpiderProductInfoHelper
                 $product_price = str_replace('￥', '', $product_price);
                 //识别商品名称
                 $product_name = $this->getValue($data, "'goodsName':'", "'");
+                //识别商品图片（一张）
+                preg_match('/class="product-album-pic".*?src="(http:|https:)?\/\/([^"]*)"/s', $data, $matches);
+                $product_image = isset($matches[2]) ? ('http://' . $matches[2]) : '';
                 break;
             case 'www.comix.com.cn': //齐心
                 //识别商品价格
@@ -179,6 +199,9 @@ class SpiderProductInfoHelper
                 $product_price = $matchs[1] ?? 0;
                 //识别商品名称
                 $product_name = $this->getValue($data, '商品名称：', '<');
+                //识别商品图片（一张）
+                preg_match('/id="bigImg".*?src="(http:|https:)?\/\/([^"]*)"/s', $data, $matches);
+                $product_image = isset($matches[2]) ? ('http://' . $matches[2]) : '';
                 break;
             case 'www.stbchina.cn': //斯泰博价格
                 //识别商品价格
@@ -191,6 +214,9 @@ class SpiderProductInfoHelper
                     'mpId' => $itemId
                 ], true, true, $is_use_agent);
                 $product_name = $this->getValue($data, 'chineseName":"', '"');
+                //识别商品图片（一张）
+                preg_match('/mainPictureUrl":"(http:|https:)?\/\/([^"]*)"/', $data, $matches);
+                $product_image = isset($matches[2]) ? ('http://' . $matches[2]) : '';
                 break;
         }
 
@@ -200,6 +226,7 @@ class SpiderProductInfoHelper
         $res = [
             'name' => $product_name,
             'price' => (float)$product_price,
+            'image' => $product_image,
         ];
         return $res;
     }
